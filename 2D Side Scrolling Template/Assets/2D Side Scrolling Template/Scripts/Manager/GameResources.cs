@@ -20,5 +20,10 @@ public class GameResources : MonoBehaviour
     [Space(10)]
     [Header("Player")]
     [Tooltip("The current player scriptable object - this is used to reference the current player between scenes")]
-    public CurrentPlayerSO CurrentPlayer;
+    [SerializeField] private CurrentPlayerSO _currentPlayer;
+
+    public CurrentPlayerSO CurrentPlayer
+    {
+        get => _currentPlayer;
+    }
 }

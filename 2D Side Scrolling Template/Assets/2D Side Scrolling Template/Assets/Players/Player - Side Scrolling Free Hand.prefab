@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6653623847344974540}
   - component: {fileID: 6162781828078344358}
   - component: {fileID: 6175551283788931484}
+  - component: {fileID: 7158854470010048259}
   m_Layer: 0
   m_Name: Player - Side Scrolling Free Hand
   m_TagString: Untagged
@@ -261,6 +262,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c20e7d64445ba8d43b8ba9a078cdc675, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7158854470010048259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056580027153078677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9c7a0b968ab61c4cb8ba5f9a7470323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3554218011110410116

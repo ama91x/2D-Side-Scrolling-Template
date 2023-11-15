@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Player Details", menuName = "Scriptable Objects/Player/Player Details", order = 1)]
+[CreateAssetMenu(fileName = "Current Player", menuName = "Scriptable Objects/Player/Current Player", order = 2)]
 public class CurrentPlayerSO : ScriptableObject
 {
     public PlayerDetailsSO PlayerDetails;
