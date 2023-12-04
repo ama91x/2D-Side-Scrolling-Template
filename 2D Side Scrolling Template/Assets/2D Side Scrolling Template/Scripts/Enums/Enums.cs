@@ -23,3 +23,10 @@ public enum GameStateSidePlatformer
     GamePaused,
     RestartGame,
 }
+
+public enum SelectionType
+{
+    None,
+    Player,
+    Enemy
+}
