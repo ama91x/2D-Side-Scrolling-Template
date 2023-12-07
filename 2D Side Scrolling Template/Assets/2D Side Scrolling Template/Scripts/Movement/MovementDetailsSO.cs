@@ -12,6 +12,9 @@ public class MovementDetailsSO : ScriptableObject
     [HideInInspector] public float DashSpeed;
     [HideInInspector] public float DashDistance;
     [HideInInspector] public float DashCoolDown;
+    [HideInInspector] public float SlideSpeed;
+    [HideInInspector] public float SlideDistance;
+    [HideInInspector] public float SlideCoolDown;
 
     public float GetMovementSpeed()
     {

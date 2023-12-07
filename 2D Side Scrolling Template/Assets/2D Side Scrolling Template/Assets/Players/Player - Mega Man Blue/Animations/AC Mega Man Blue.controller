@@ -1189,9 +1189,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Is Sliding
     m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: Is Moving
-    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4962723973226630632}
   m_Solo: 0
@@ -1205,7 +1202,7 @@ AnimatorStateTransition:
   m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
+  m_CanTransitionToSelf: 0
 --- !u!1102 &4962723973226630632
 AnimatorState:
   serializedVersion: 6

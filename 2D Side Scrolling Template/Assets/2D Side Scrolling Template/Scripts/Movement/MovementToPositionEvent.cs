@@ -7,7 +7,7 @@ public class MovementToPositionEvent : MonoBehaviour
 {
     public event Action<MovementToPositionEvent, MovementToPositionEventArgs> OnMoveToPosition;
 
-    public void CallMovementToPositionEvent(Vector3 movePosition, Vector3 currentPosition, float moveSpeed, Vector2 moveDirection, bool IsDashing = false)
+    public void CallMovementToPositionEvent(Vector3 movePosition, Vector3 currentPosition, float moveSpeed, Vector2 moveDirection, bool isDashing = false, bool isSliding = false)
     {
         OnMoveToPosition?.Invoke(this, new MovementToPositionEventArgs()
         {
@@ -15,7 +15,8 @@ public class MovementToPositionEvent : MonoBehaviour
             CurrentPosition = currentPosition,
             MoveSpeed = moveSpeed,
             MoveDirection = moveDirection,
-            IsDashing = IsDashing
+            IsDashing = isDashing,
+            IsSliding = isSliding
         });
     }
 }
@@ -27,4 +28,5 @@ public class MovementToPositionEventArgs : EventArgs
     public Vector2 MoveDirection;
     public float MoveSpeed;
     public bool IsDashing;
+    public bool IsSliding;
 }

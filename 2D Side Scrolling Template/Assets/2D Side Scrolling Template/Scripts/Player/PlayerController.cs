@@ -11,13 +11,16 @@ public class PlayerController : MonoBehaviour
     // Private
     private float _moveSpeed;
     private float _playerDashCoolDownTimer = 0.0f;
+    private float _playerSlideCoolDownTimer = 0.0f;
 
     private bool _isFacingRight;
     private bool _isPlayerDashing = false;
+    private bool _isPlayerSliding = false;
 
     private Vector3 _velocity;
 
     private Coroutine _playerDashCoroutine;
+    private Coroutine _playerSlideCotoutine;
     private WaitForFixedUpdate _waitForFixedUpdate;
 
     private Player _player;
@@ -37,11 +40,13 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
 
-        if (_isPlayerDashing)
+        if (_isPlayerDashing || _isPlayerSliding)
         {
             if (_player.CPhsics2D.CollisionInfos.Left || _player.CPhsics2D.CollisionInfos.Right)
             {
                 StopPlayerDashRoutine();
+                StopPlayerSlideRoutine();
+                Debug.Log("Collsions Appere");
             }
 
             return;
@@ -58,7 +63,6 @@ public class PlayerController : MonoBehaviour
         _velocity.y += _player.CPhsics2D.Gravity * Time.deltaTime;
 
         _player.CPhsics2D.Move(_velocity * Time.deltaTime);
-
     }
 
     private void MovementInput()
@@ -67,6 +71,7 @@ public class PlayerController : MonoBehaviour
         float VerticalMovement = Input.GetAxisRaw("Vertical");
 
         bool dashButtonDown = Input.GetKeyDown(KeyCode.LeftControl);
+        bool slideButtonDown = Input.GetKeyDown(KeyCode.C);
 
         float directionX = Mathf.Sign(horizontalMovement);
 
@@ -74,13 +79,17 @@ public class PlayerController : MonoBehaviour
 
         if (direction != Vector2.zero)
         {
-            if (!dashButtonDown)
+            if (!dashButtonDown && !slideButtonDown)
             {
                 _player.MovementByVelocityEvents.CallMovementByVelocityEvent(direction, _moveSpeed * Time.deltaTime);
             }
-            else if (_playerDashCoolDownTimer <= 0.0f)
+            else if (_playerDashCoolDownTimer <= 0.0f && !slideButtonDown)
             {
                 PlayerDash((Vector3)direction);
+            }
+            else if (_playerDashCoolDownTimer <= 0.0f && !dashButtonDown)
+            {
+                PlayerSlid((Vector3)direction);
             }
 
             if (directionX > 0 && !_isFacingRight)
@@ -105,6 +114,11 @@ public class PlayerController : MonoBehaviour
         _playerDashCoroutine = StartCoroutine(PlayerDashRoutin(direction));
     }
 
+    private void PlayerSlid(Vector3 direction)
+    {
+        _playerSlideCotoutine = StartCoroutine(PlayerSlideRoutin(direction));
+    }
+
     private IEnumerator PlayerDashRoutin(Vector3 direction)
     {
         float minDistance = 0.2f;
@@ -115,7 +129,7 @@ public class PlayerController : MonoBehaviour
 
         while (Vector3.Distance(_player.transform.position, targetPosition) > minDistance)
         {
-            _player.MovementToPositionEvents.CallMovementToPositionEvent(targetPosition, _player.transform.position, _movementDetails.DashSpeed * Time.deltaTime, direction, _isPlayerDashing);
+            _player.MovementToPositionEvents.CallMovementToPositionEvent(targetPosition, _player.transform.position, _movementDetails.DashSpeed * Time.deltaTime, direction, _isPlayerDashing, false);
 
             Debug.Log("Player Distance is: " + Vector3.Distance(_player.transform.position, targetPosition));
 
@@ -124,6 +138,29 @@ public class PlayerController : MonoBehaviour
 
         _isPlayerDashing = false;
         _playerDashCoolDownTimer = _movementDetails.DashCoolDown;
+
+        _player.transform.position = targetPosition;
+    }
+
+    private IEnumerator PlayerSlideRoutin(Vector3 direction)
+    {
+        float minDistance = 0.2f;
+
+        _isPlayerSliding = true;
+
+        Vector3 targetPosition = _player.transform.position + direction * _movementDetails.SlideDistance;
+
+        while (Vector3.Distance(_player.transform.position, targetPosition) > minDistance)
+        {
+            _player.MovementToPositionEvents.CallMovementToPositionEvent(targetPosition, _player.transform.position, _movementDetails.SlideSpeed * Time.deltaTime, direction, false, _isPlayerSliding);
+
+            Debug.Log("Player Distance is: " + Vector3.Distance(_player.transform.position, targetPosition));
+
+            yield return _waitForFixedUpdate;
+        }
+
+        _isPlayerSliding = false;
+        _playerSlideCoolDownTimer = _movementDetails.SlideCoolDown;
 
         _player.transform.position = targetPosition;
     }
@@ -169,6 +206,16 @@ public class PlayerController : MonoBehaviour
             StopCoroutine(_playerDashCoroutine);
 
             _isPlayerDashing = false;
+        }
+    }
+
+    private void StopPlayerSlideRoutine()
+    {
+        if (_playerSlideCotoutine != null)
+        {
+            StopCoroutine(_playerSlideCotoutine);
+
+            _isPlayerSliding = false;
         }
     }
 }

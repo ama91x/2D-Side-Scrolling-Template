@@ -19,3 +19,6 @@ MonoBehaviour:
   DashSpeed: 25
   DashDistance: 5
   DashCoolDown: 0.4
+  SlideSpeed: 8
+  SlideDistance: 5
+  SlideCoolDown: 0.4

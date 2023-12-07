@@ -47,6 +47,11 @@ public class CustomPhysics : MonoBehaviour
         CalculateRaySpacing();
     }
 
+    private void Update()
+    {
+        // TODO: CalculateRaySpacing(); if there the player slides
+    }
+
     public void Move(Vector3 velocity)
     {
         UpdateRaycastOrigins();

@@ -28,19 +28,22 @@ public class AnimatePlayer : MonoBehaviour
 
     private void MovementByVelocityEvent_OnMovementByVelocity(MovementByVelocityEvent movementByVelocityEvent, MovementByVelocityArgs movementByVelocityArgs)
     {
-        InitializeRollAnimationParameters();
+        InitializeDashAnimationParameters();
+        InitializeSlidingAnimationParameters();
         SetMovementAnimationParameters();
     }
 
     private void IdleEvent_OnIdle(IdleEvent idleEvent)
     {
-        InitializeRollAnimationParameters();
+        InitializeDashAnimationParameters();
+        InitializeSlidingAnimationParameters();
         SetIdealAnimationsParameters();
     }
 
     private void MovementToPositionEvent_OnMoveToPosition(MovementToPositionEvent movementToPositionEvent, MovementToPositionEventArgs movementToPositionEventArgs)
     {
-        InitializeRollAnimationParameters();
+        InitializeDashAnimationParameters();
+        InitializeSlidingAnimationParameters();
         SetMovementToPositionAnimationParameters(movementToPositionEventArgs);
     }
 
@@ -59,9 +62,14 @@ public class AnimatePlayer : MonoBehaviour
         _player.Animators.SetBool(Settings.IsDashing, false);
     }
 
-    private void InitializeRollAnimationParameters()
+    private void InitializeDashAnimationParameters()
     {
         _player.Animators.SetBool(Settings.IsDashing, false);
+    }
+
+    private void InitializeSlidingAnimationParameters()
+    {
+        _player.Animators.SetBool(Settings.IsSliding, false);
     }
 
     private void SetMovementToPositionAnimationParameters(MovementToPositionEventArgs movementToPositionEventArgs)
@@ -70,6 +78,12 @@ public class AnimatePlayer : MonoBehaviour
         {
             _player.Animators.SetBool(Settings.IsDashing, true);
             _player.Animators.SetBool(Settings.IsMoving, false);
+        }
+        else if (movementToPositionEventArgs.IsSliding)
+        {
+            _player.Animators.SetBool(Settings.IsDashing, false);
+            _player.Animators.SetBool(Settings.IsMoving, false);
+            _player.Animators.SetBool(Settings.IsSliding, true);
         }
     }
 }
