@@ -16,6 +16,8 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(Idle))]
 [RequireComponent(typeof(MovementByVelocityEvent))]
 [RequireComponent(typeof(MovementByVelocity))]
+[RequireComponent(typeof(MovementToPositionEvent))]
+[RequireComponent(typeof(MovementToPosition))]
 [RequireComponent(typeof(Health))]
 
 [DisallowMultipleComponent]
@@ -27,8 +29,9 @@ public class Player : MonoBehaviour
     private PlayerController _playerController;
     private Health _health;
 
-    private MovementByVelocityEvent _movementByVelocityEvent;
     private IdleEvent _idleEvent;
+    private MovementByVelocityEvent _movementByVelocityEvent;
+    private MovementToPositionEvent _movementToPositionEvent;
 
     private PlayerDetailsSO _playerDetails;
 
@@ -77,14 +80,20 @@ public class Player : MonoBehaviour
         get => _idleEvent;
     }
 
+    public MovementToPositionEvent MovementToPositionEvents
+    {
+        get => _movementToPositionEvent;
+    }
+
     private void Awake()
     {
         _customPhysics = GetComponent<CustomPhysics>();
         _playerController = GetComponent<PlayerController>();
         _health = GetComponent<Health>();
 
-        _movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
         _idleEvent = GetComponent<IdleEvent>();
+        _movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
+        _movementToPositionEvent = GetComponent<MovementToPositionEvent>();
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();

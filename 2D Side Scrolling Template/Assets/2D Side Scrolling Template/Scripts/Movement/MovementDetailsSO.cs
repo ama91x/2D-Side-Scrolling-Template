@@ -9,6 +9,9 @@ public class MovementDetailsSO : ScriptableObject
     [HideInInspector] public float MovementSpeed = 8f;
     [HideInInspector] public float MinMovementSpeed = 8f;
     [HideInInspector] public float MaxMovementSpeed = 8f;
+    [HideInInspector] public float DashSpeed;
+    [HideInInspector] public float DashDistance;
+    [HideInInspector] public float DashCoolDown;
 
     public float GetMovementSpeed()
     {
@@ -18,9 +21,16 @@ public class MovementDetailsSO : ScriptableObject
         if (MinMovementSpeed > MaxMovementSpeed)
             Debug.LogError("Min Movement Speed can't be greter that Max Movement Speed");
 
-        if (MinMovementSpeed == MaxMovementSpeed)
-            return MinMovementSpeed;
+        if (CharacterType == SelectionType.Player)
+        {
+            return MovementSpeed;
+        }
         else
-            return Random.Range(MinMovementSpeed, MaxMovementSpeed);
+        {
+            if (MinMovementSpeed == MaxMovementSpeed)
+                return MinMovementSpeed;
+            else
+                return Random.Range(MinMovementSpeed, MaxMovementSpeed);
+        }
     }
 }

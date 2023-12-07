@@ -13,20 +13,20 @@ public class CinemachineTarget : MonoBehaviour
 
     private void Start()
     {
-        SetCinemachineTargetGroup();
+        // SetCinemachineTargetGroup();
     }
 
-    private void SetCinemachineTargetGroup()
-    {
-        CinemachineTargetGroup.Target cinemachienTargetGroupeTarget_Player = new CinemachineTargetGroup.Target
-        {
-            weight = 1f,
-            radius = 1f,
-            target = GameManager.Instance.GetPlayer().transform
-        };
+    // private void SetCinemachineTargetGroup()
+    // {
+    //     CinemachineTargetGroup.Target cinemachienTargetGroupeTarget_Player = new CinemachineTargetGroup.Target
+    //     {
+    //         weight = 1f,
+    //         radius = 1f,
+    //         target = GameManager.Instance.GetPlayer().transform
+    //     };
 
-        CinemachineTargetGroup.Target[] cinemachineTargetArray = new CinemachineTargetGroup.Target[] { cinemachienTargetGroupeTarget_Player };
+    //     CinemachineTargetGroup.Target[] cinemachineTargetArray = new CinemachineTargetGroup.Target[] { cinemachienTargetGroupeTarget_Player };
 
-        _cinemachineTargetGroup.m_Targets = cinemachineTargetArray;
-    }
+    //     _cinemachineTargetGroup.m_Targets = cinemachineTargetArray;
+    // }
 }

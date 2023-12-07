@@ -10,8 +10,15 @@ public class PlayerController : MonoBehaviour
 
     // Private
     private float _moveSpeed;
+    private float _playerDashCoolDownTimer = 0.0f;
+
+    private bool _isFacingRight;
+    private bool _isPlayerDashing = false;
 
     private Vector3 _velocity;
+
+    private Coroutine _playerDashCoroutine;
+    private WaitForFixedUpdate _waitForFixedUpdate;
 
     private Player _player;
 
@@ -22,30 +29,146 @@ public class PlayerController : MonoBehaviour
         _moveSpeed = _movementDetails.GetMovementSpeed();
     }
 
+    private void Start()
+    {
+        _waitForFixedUpdate = new WaitForFixedUpdate();
+    }
+
     private void Update()
     {
+
+        if (_isPlayerDashing)
+        {
+            if (_player.CPhsics2D.CollisionInfos.Left || _player.CPhsics2D.CollisionInfos.Right)
+            {
+                StopPlayerDashRoutine();
+            }
+
+            return;
+        }
+
+        if (_player.CPhsics2D.CollisionInfos.Below || _player.CPhsics2D.CollisionInfos.Above)
+        {
+            _velocity.y = 0;
+        }
+
         MovementInput();
+        PlayerDashCooldownTimer();
 
         _velocity.y += _player.CPhsics2D.Gravity * Time.deltaTime;
 
         _player.CPhsics2D.Move(_velocity * Time.deltaTime);
+
     }
 
     private void MovementInput()
     {
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
+        float VerticalMovement = Input.GetAxisRaw("Vertical");
 
-        Vector2 direction = new Vector2(horizontalMovement, 0);
+        bool dashButtonDown = Input.GetKeyDown(KeyCode.LeftControl);
+
+        float directionX = Mathf.Sign(horizontalMovement);
+
+        Vector2 direction = new Vector2(horizontalMovement, VerticalMovement);
 
         if (direction != Vector2.zero)
         {
-            _player.MovementByVelocityEvents.CallMovementByVelocityEvent(direction, _moveSpeed * Time.deltaTime);
+            if (!dashButtonDown)
+            {
+                _player.MovementByVelocityEvents.CallMovementByVelocityEvent(direction, _moveSpeed * Time.deltaTime);
+            }
+            else if (_playerDashCoolDownTimer <= 0.0f)
+            {
+                PlayerDash((Vector3)direction);
+            }
+
+            if (directionX > 0 && !_isFacingRight)
+            {
+                Turn();
+            }
+            else if (directionX < 0 && _isFacingRight)
+            {
+                Turn();
+            }
         }
         else
         {
             _player.IdleEvents.CallIdleEvent();
         }
 
-        Debug.Log(direction);
+        //Debug.Log(direction);
+    }
+
+    private void PlayerDash(Vector3 direction)
+    {
+        _playerDashCoroutine = StartCoroutine(PlayerDashRoutin(direction));
+    }
+
+    private IEnumerator PlayerDashRoutin(Vector3 direction)
+    {
+        float minDistance = 0.2f;
+
+        _isPlayerDashing = true;
+
+        Vector3 targetPosition = _player.transform.position + direction * _movementDetails.DashDistance;
+
+        while (Vector3.Distance(_player.transform.position, targetPosition) > minDistance)
+        {
+            _player.MovementToPositionEvents.CallMovementToPositionEvent(targetPosition, _player.transform.position, _movementDetails.DashSpeed * Time.deltaTime, direction, _isPlayerDashing);
+
+            Debug.Log("Player Distance is: " + Vector3.Distance(_player.transform.position, targetPosition));
+
+            yield return _waitForFixedUpdate;
+        }
+
+        _isPlayerDashing = false;
+        _playerDashCoolDownTimer = _movementDetails.DashCoolDown;
+
+        _player.transform.position = targetPosition;
+    }
+
+    private void PlayerDashCooldownTimer()
+    {
+        if (_playerDashCoolDownTimer >= 0.0f)
+        {
+            _playerDashCoolDownTimer -= Time.deltaTime;
+        }
+    }
+
+    private void Turn()
+    {
+        if (_isFacingRight)
+        {
+            // Rotating the sprite 180 degree
+            // Vector3 rotate = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+            // transform.rotation = Quaternion.Euler(rotate);
+            // _player.BoxCollider.size = new Vector2(-0.6f, 1.3f);
+
+            // Fliping The sprite by local Scale
+            _player.transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            _isFacingRight = !_isFacingRight;
+        }
+        else
+        {
+            // Rotating the sprite 180 degree
+            // Vector3 rotate = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+            // transform.rotation = Quaternion.Euler(rotate);
+            // _player.BoxCollider.size = new Vector2(0.6f, 1.3f);
+
+            // Fliping The sprite by local Scale
+            _player.transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            _isFacingRight = !_isFacingRight;
+        }
+    }
+
+    private void StopPlayerDashRoutine()
+    {
+        if (_playerDashCoroutine != null)
+        {
+            StopCoroutine(_playerDashCoroutine);
+
+            _isPlayerDashing = false;
+        }
     }
 }

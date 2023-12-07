@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterType: 1
   MovementSpeed: 8
-  MinMovementSpeed: 8
-  MaxMovementSpeed: 8
+  MinMovementSpeed: 1
+  MaxMovementSpeed: 1
+  DashSpeed: 25
+  DashDistance: 5
+  DashCoolDown: 0.4

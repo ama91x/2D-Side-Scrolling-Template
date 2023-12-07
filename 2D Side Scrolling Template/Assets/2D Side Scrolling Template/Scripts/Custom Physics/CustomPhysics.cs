@@ -22,6 +22,7 @@ public class CustomPhysics : MonoBehaviour
     private float _verticalRaySpacing;
 
     private RaycastOrigins _raycastOrigins;
+    private CollisionInfo _collisions;
 
     private Player _player;
 
@@ -29,6 +30,11 @@ public class CustomPhysics : MonoBehaviour
     {
         get => _gravity;
         set => _gravity = value;
+    }
+
+    public CollisionInfo CollisionInfos
+    {
+        get => _collisions;
     }
 
     private void Awake()
@@ -44,6 +50,9 @@ public class CustomPhysics : MonoBehaviour
     public void Move(Vector3 velocity)
     {
         UpdateRaycastOrigins();
+
+        _collisions.Reser();
+
         if (velocity.x != 0)
         {
             HorizontalCollisions(ref velocity);
@@ -56,7 +65,7 @@ public class CustomPhysics : MonoBehaviour
         transform.Translate(velocity);
     }
 
-    void HorizontalCollisions(ref Vector3 velocity)
+    private void HorizontalCollisions(ref Vector3 velocity)
     {
         float directionX = Mathf.Sign(velocity.x);
         float rayLength = Mathf.Abs(velocity.x) + _skinWidth;
@@ -64,6 +73,7 @@ public class CustomPhysics : MonoBehaviour
         for (int i = 0; i < _horizontalRayCount; i++)
         {
             Vector2 rayOrigin = (directionX == -1) ? _raycastOrigins.BottomLeft : _raycastOrigins.BottomRight;
+
             rayOrigin += Vector2.up * (_horizontalRaySpacing * i);
             RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, _collisionMask);
 
@@ -73,11 +83,14 @@ public class CustomPhysics : MonoBehaviour
             {
                 velocity.x = (hit.distance - _skinWidth) * directionX;
                 rayLength = hit.distance;
+
+                _collisions.Left = directionX == -1;
+                _collisions.Right = directionX == 1;
             }
         }
     }
 
-    void VerticalCollisions(ref Vector3 velocity)
+    private void VerticalCollisions(ref Vector3 velocity)
     {
         float directionY = Mathf.Sign(velocity.y);
         float rayLength = Mathf.Abs(velocity.y) + _skinWidth;
@@ -94,11 +107,14 @@ public class CustomPhysics : MonoBehaviour
             {
                 velocity.y = (hit.distance - _skinWidth) * directionY;
                 rayLength = hit.distance;
+
+                _collisions.Below = directionY == -1;
+                _collisions.Above = directionY == 1;
             }
         }
     }
 
-    void CalculateRaySpacing()
+    private void CalculateRaySpacing()
     {
         Bounds bounds = _player.BoxCollider.bounds;
         bounds.Expand(_skinWidth * -2);
@@ -110,7 +126,7 @@ public class CustomPhysics : MonoBehaviour
         _verticalRaySpacing = bounds.size.x / (_verticalRayCount - 1);
     }
 
-    void UpdateRaycastOrigins()
+    private void UpdateRaycastOrigins()
     {
         Bounds bounds = _player.BoxCollider.bounds;
         bounds.Expand(_skinWidth * -2);
@@ -125,5 +141,17 @@ public class CustomPhysics : MonoBehaviour
     {
         public Vector2 TopLeft, TopRight;
         public Vector2 BottomLeft, BottomRight;
+    }
+
+    public struct CollisionInfo
+    {
+        public bool Above, Below;
+        public bool Left, Right;
+
+        public void Reser()
+        {
+            Above = Below = false;
+            Left = Right = false;
+        }
     }
 }
