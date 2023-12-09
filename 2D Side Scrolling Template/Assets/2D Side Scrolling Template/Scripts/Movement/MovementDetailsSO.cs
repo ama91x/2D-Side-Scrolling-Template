@@ -7,6 +7,7 @@ public class MovementDetailsSO : ScriptableObject
 {
     [HideInInspector] public SelectionType CharacterType;
     [HideInInspector] public float MovementSpeed = 8f;
+    [HideInInspector] public float Acceleration = 30f;
     [HideInInspector] public float MinMovementSpeed = 8f;
     [HideInInspector] public float MaxMovementSpeed = 8f;
     [HideInInspector] public float DashSpeed;
@@ -15,6 +16,8 @@ public class MovementDetailsSO : ScriptableObject
     [HideInInspector] public float SlideSpeed;
     [HideInInspector] public float SlideDistance;
     [HideInInspector] public float SlideCoolDown;
+    [HideInInspector] public float JumpHeight;
+    [HideInInspector] public float TimeToJumpApex;
 
     public float GetMovementSpeed()
     {

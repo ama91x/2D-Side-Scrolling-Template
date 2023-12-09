@@ -15,6 +15,7 @@ public class AnimatePlayer : MonoBehaviour
     private void OnEnable()
     {
         _player.IdleEvents.OnIdle += IdleEvent_OnIdle;
+        _player.JumpEvents.OnJump += JumpEvent_OnJump;
         _player.MovementByVelocityEvents.OnMovementByVelocity += MovementByVelocityEvent_OnMovementByVelocity;
         _player.MovementToPositionEvents.OnMoveToPosition += MovementToPositionEvent_OnMoveToPosition;
     }
@@ -22,6 +23,7 @@ public class AnimatePlayer : MonoBehaviour
     private void OnDisable()
     {
         _player.IdleEvents.OnIdle -= IdleEvent_OnIdle;
+        _player.JumpEvents.OnJump -= JumpEvent_OnJump;
         _player.MovementByVelocityEvents.OnMovementByVelocity -= MovementByVelocityEvent_OnMovementByVelocity;
         _player.MovementToPositionEvents.OnMoveToPosition -= MovementToPositionEvent_OnMoveToPosition;
     }
@@ -40,11 +42,25 @@ public class AnimatePlayer : MonoBehaviour
         SetIdealAnimationsParameters();
     }
 
+    private void JumpEvent_OnJump(JumpEvent jumpEvent, JumpEventArgs jumpEventArgs)
+    {
+        SetJumpParametor();
+    }
+
     private void MovementToPositionEvent_OnMoveToPosition(MovementToPositionEvent movementToPositionEvent, MovementToPositionEventArgs movementToPositionEventArgs)
     {
         InitializeDashAnimationParameters();
         InitializeSlidingAnimationParameters();
         SetMovementToPositionAnimationParameters(movementToPositionEventArgs);
+    }
+
+    private void SetJumpParametor()
+    {
+        _player.Animators.SetBool(Settings.IsJumping, true);
+        _player.Animators.SetBool(Settings.IsMoving, false);
+        _player.Animators.SetBool(Settings.IsIdle, false);
+        _player.Animators.SetBool(Settings.IsAiming, false);
+        _player.Animators.SetBool(Settings.IsDashing, false);
     }
 
     private void SetMovementAnimationParameters()
@@ -53,6 +69,8 @@ public class AnimatePlayer : MonoBehaviour
         _player.Animators.SetBool(Settings.IsIdle, false);
         _player.Animators.SetBool(Settings.IsAiming, false);
         _player.Animators.SetBool(Settings.IsDashing, false);
+        _player.Animators.SetBool(Settings.IsJumping, false);
+
     }
 
     private void SetIdealAnimationsParameters()
@@ -60,6 +78,8 @@ public class AnimatePlayer : MonoBehaviour
         _player.Animators.SetBool(Settings.IsMoving, false);
         _player.Animators.SetBool(Settings.IsIdle, true);
         _player.Animators.SetBool(Settings.IsDashing, false);
+        _player.Animators.SetBool(Settings.IsJumping, false);
+
     }
 
     private void InitializeDashAnimationParameters()

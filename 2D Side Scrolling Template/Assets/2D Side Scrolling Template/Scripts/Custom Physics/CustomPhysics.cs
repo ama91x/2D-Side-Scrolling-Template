@@ -15,11 +15,16 @@ public class CustomPhysics : MonoBehaviour
     [Space(2)]
     [SerializeField] private float _gravity = -20;
 
+    [Tooltip("Used to check if there is any collisions")]
     [SerializeField] private LayerMask _collisionMask;
+
+    [Tooltip("Used to check if there is up collisions if player is sliding or any other usess")]
+    [SerializeField] private LayerMask _upCollisionMask;
 
     // Private
     private float _horizontalRaySpacing;
     private float _verticalRaySpacing;
+    private float _hitSizeX;
 
     private RaycastOrigins _raycastOrigins;
     private CollisionInfo _collisions;
@@ -30,6 +35,11 @@ public class CustomPhysics : MonoBehaviour
     {
         get => _gravity;
         set => _gravity = value;
+    }
+
+    public float HitSizeX
+    {
+        get => _hitSizeX;
     }
 
     public CollisionInfo CollisionInfos
@@ -45,11 +55,6 @@ public class CustomPhysics : MonoBehaviour
     void Start()
     {
         CalculateRaySpacing();
-    }
-
-    private void Update()
-    {
-        // TODO: CalculateRaySpacing(); if there the player slides
     }
 
     public void Move(Vector3 velocity)
@@ -119,7 +124,34 @@ public class CustomPhysics : MonoBehaviour
         }
     }
 
-    private void CalculateRaySpacing()
+    public bool CollisionCheckFromUpove()
+    {
+        float rayLength = 0.5f;
+        bool isHit = false;
+
+        for (int i = 0; i < _verticalRayCount; i++)
+        {
+            Vector2 rayOrigin = _raycastOrigins.TopLeft;
+            rayOrigin += Vector2.right * (_verticalRaySpacing * i);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * rayLength, _upCollisionMask);
+
+            Debug.DrawRay(rayOrigin, Vector2.up * rayLength, Color.red);
+
+            if (hit)
+            {
+                _hitSizeX = hit.transform.localScale.x;
+
+                Debug.Log(hit.transform.localScale.x.ToString());
+                Debug.Log(hit.collider);
+
+                isHit = true;
+            }
+        }
+
+        return isHit;
+    }
+
+    public void CalculateRaySpacing()
     {
         Bounds bounds = _player.BoxCollider.bounds;
         bounds.Expand(_skinWidth * -2);

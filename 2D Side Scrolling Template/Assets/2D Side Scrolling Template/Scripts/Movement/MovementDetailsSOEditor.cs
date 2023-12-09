@@ -21,6 +21,7 @@ public class MovementDetailsSOEditor : Editor
         {
             EditorGUILayout.LabelField("Movement Details");
             movementDetails.MovementSpeed = EditorGUILayout.FloatField("Movement Speed", movementDetails.MovementSpeed);
+            movementDetails.Acceleration = EditorGUILayout.FloatField("Acceleration", movementDetails.Acceleration);
 
             EditorGUILayout.LabelField("");
 
@@ -35,6 +36,12 @@ public class MovementDetailsSOEditor : Editor
             movementDetails.SlideSpeed = EditorGUILayout.FloatField("Dash Speed", movementDetails.SlideSpeed);
             movementDetails.SlideDistance = EditorGUILayout.FloatField("Dash Distance", movementDetails.SlideDistance);
             movementDetails.SlideCoolDown = EditorGUILayout.FloatField("Dash Cool Down", movementDetails.SlideCoolDown);
+
+            EditorGUILayout.LabelField("");
+
+            EditorGUILayout.LabelField("Jumping Details");
+            movementDetails.JumpHeight = EditorGUILayout.FloatField("Jump Height", movementDetails.JumpHeight);
+            movementDetails.TimeToJumpApex = EditorGUILayout.FloatField("Time To JumpApex", movementDetails.TimeToJumpApex);
         }
         else if (movementDetails.CharacterType == SelectionType.Enemy)
         {

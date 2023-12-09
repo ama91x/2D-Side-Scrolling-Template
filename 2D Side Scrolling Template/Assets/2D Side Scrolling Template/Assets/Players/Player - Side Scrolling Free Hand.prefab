@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7808961621955279527}
   - component: {fileID: 8725102606345889112}
   - component: {fileID: 6653623847344974540}
-  - component: {fileID: 6162781828078344358}
+  - component: {fileID: -64602090666974640}
   - component: {fileID: 6937800016328190168}
   - component: {fileID: 6175551283788931484}
   - component: {fileID: 7624163578265360040}
@@ -26,9 +26,9 @@ GameObject:
   - component: {fileID: 2479080105034174903}
   - component: {fileID: 4501399712077662204}
   - component: {fileID: 1339000445463554973}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player - Side Scrolling Free Hand
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -234,7 +234,7 @@ PolygonCollider2D:
       - {x: 0.20235106, y: 0.7848059}
       - {x: 0.43718538, y: 1.2532586}
   m_UseDelaunayMesh: 0
---- !u!50 &6162781828078344358
+--- !u!50 &-64602090666974640
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -257,10 +257,10 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!114 &6937800016328190168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +277,9 @@ MonoBehaviour:
   _verticalRayCount: 4
   _gravity: -20
   _collisionMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _upCollisionMask:
     serializedVersion: 2
     m_Bits: 128
 --- !u!114 &6175551283788931484

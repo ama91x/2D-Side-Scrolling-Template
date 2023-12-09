@@ -14,6 +14,8 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(AnimatePlayer))]
 [RequireComponent(typeof(IdleEvent))]
 [RequireComponent(typeof(Idle))]
+[RequireComponent(typeof(JumpEvent))]
+[RequireComponent(typeof(Jump))]
 [RequireComponent(typeof(MovementByVelocityEvent))]
 [RequireComponent(typeof(MovementByVelocity))]
 [RequireComponent(typeof(MovementToPositionEvent))]
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
     private Health _health;
 
     private IdleEvent _idleEvent;
+    private JumpEvent _jumpEvent;
     private MovementByVelocityEvent _movementByVelocityEvent;
     private MovementToPositionEvent _movementToPositionEvent;
 
@@ -80,6 +83,11 @@ public class Player : MonoBehaviour
         get => _idleEvent;
     }
 
+    public JumpEvent JumpEvents
+    {
+        get => _jumpEvent;
+    }
+
     public MovementToPositionEvent MovementToPositionEvents
     {
         get => _movementToPositionEvent;
@@ -92,6 +100,7 @@ public class Player : MonoBehaviour
         _health = GetComponent<Health>();
 
         _idleEvent = GetComponent<IdleEvent>();
+        _jumpEvent = GetComponent<JumpEvent>();
         _movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
         _movementToPositionEvent = GetComponent<MovementToPositionEvent>();
 

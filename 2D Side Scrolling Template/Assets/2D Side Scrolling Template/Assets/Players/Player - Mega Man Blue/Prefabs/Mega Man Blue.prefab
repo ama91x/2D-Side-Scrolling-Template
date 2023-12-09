@@ -152,6 +152,10 @@ PrefabInstance:
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[10].y
       value: 1.097308
       objectReference: {fileID: 0}
+    - target: {fileID: 6937800016328190168, guid: 62272e2b0c8aea64cab2f05bbc472703, type: 3}
+      propertyPath: _upCollisionMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 7808961621955279527, guid: 62272e2b0c8aea64cab2f05bbc472703, type: 3}
       propertyPath: m_Controller
       value: 
@@ -164,7 +168,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6162781828078344358, guid: 62272e2b0c8aea64cab2f05bbc472703, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
