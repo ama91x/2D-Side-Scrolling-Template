@@ -25,3 +25,5 @@ MonoBehaviour:
   SlideCoolDown: 0.4
   JumpHeight: 4
   TimeToJumpApex: 0.4
+  CoyoteTime: 0.1
+  JumpBufferLength: 0.2

@@ -15,11 +15,16 @@ public class PlayerController : MonoBehaviour
     private float _playerSlideCoolDownTimer = 0.0f;
     private float _currentSpeed;
     private float _jumpVelocity;
+    private float _coyoteTimeCounter;
+    private float _jumpBufferCounter;
+
 
     private bool _isFacingRight;
     private bool _isPlayerDashing = false;
     private bool _isPlayerSliding = false;
     private bool _isPlayerFinishSlide = false;
+    private bool _isJumping;
+    private bool _jumpBuffered;
 
     private Vector3 _velocity;
 
@@ -61,7 +66,6 @@ public class PlayerController : MonoBehaviour
             {
                 StopPlayerDashRoutine();
                 StopPlayerSlideRoutine();
-                Debug.Log("Collsions Appere");
             }
 
             return;
@@ -70,7 +74,24 @@ public class PlayerController : MonoBehaviour
         if (_player.CPhsics2D.CollisionInfos.Below || _player.CPhsics2D.CollisionInfos.Above)
         {
             _velocity.y = 0;
-            //_player.Animators.SetBool(Settings.IsJumping, false);
+        }
+
+        if (_player.CPhsics2D.CollisionInfos.Below)
+        {
+            _coyoteTimeCounter = _movementDetails.CoyoteTime;
+        }
+        else
+        {
+            _coyoteTimeCounter -= Time.deltaTime;
+        }
+
+        if (_jumpBuffered)
+        {
+            _jumpBufferCounter -= Time.deltaTime;
+            if (_jumpBufferCounter <= 0)
+            {
+                _jumpBuffered = false;
+            }
         }
 
         PlayerJump();
@@ -79,22 +100,26 @@ public class PlayerController : MonoBehaviour
 
         _velocity.y += _player.CPhsics2D.Gravity * Time.deltaTime;
 
+        float maxFallSpeed = _player.CPhsics2D.Gravity / 1.6f;
+
+        if (_velocity.y < maxFallSpeed)
+        {
+            _velocity.y = maxFallSpeed;
+        }
+
         _player.CPhsics2D.Move(_velocity * Time.deltaTime);
     }
 
     private void MovementInput()
     {
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
-        //float VerticalMovement = Input.GetAxisRaw("Vertical");
 
         bool dashButtonDown = Input.GetKeyDown(KeyCode.LeftControl);
         bool slideButtonDown = Input.GetKeyDown(KeyCode.C);
 
-
-
         float directionX = Mathf.Sign(horizontalMovement);
 
-        Vector2 direction = new Vector2(horizontalMovement, 0);
+        Vector2 direction = new Vector2(horizontalMovement, 0.0f);
 
         if (direction != Vector2.zero)
         {
@@ -147,9 +172,48 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _player.CPhsics2D.CollisionInfos.Below)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (_coyoteTimeCounter > 0)
+            {
+                _isJumping = true;
+                _velocity.y = _player.JumpEvents.CallJumpEvent(_jumpVelocity);
+                _jumpBuffered = false;
+            }
+            else
+            {
+                _jumpBuffered = true;
+                _jumpBufferCounter = _movementDetails.JumpBufferLength;
+            }
+        }
+
+        if (_jumpBuffered && _coyoteTimeCounter > 0)
+        {
+            _isJumping = true;
             _velocity.y = _player.JumpEvents.CallJumpEvent(_jumpVelocity);
+            _jumpBuffered = false;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            _isJumping = false;
+        }
+
+        if (_isJumping == false && _velocity.y > 0)
+        {
+            _velocity.y *= _player.JumpEvents.CallJumpEvent(_jumpVelocity * 0.2f * Time.deltaTime);
+        }
+
+        if (_velocity.y < 0)
+        {
+            _velocity.y *= _player.CPhsics2D.FallMultiplier;
+
+            float maxFallSpeed = _player.CPhsics2D.Gravity / 1.6f;
+
+            if (_velocity.y < maxFallSpeed)
+            {
+                _velocity.y = maxFallSpeed;
+            }
         }
     }
 

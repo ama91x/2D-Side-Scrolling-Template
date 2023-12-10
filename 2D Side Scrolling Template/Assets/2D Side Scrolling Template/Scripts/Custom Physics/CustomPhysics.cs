@@ -14,6 +14,8 @@ public class CustomPhysics : MonoBehaviour
 
     [Space(2)]
     [SerializeField] private float _gravity = -20;
+    [SerializeField] private float _fallMultiplier = 1.03f;
+
 
     [Tooltip("Used to check if there is any collisions")]
     [SerializeField] private LayerMask _collisionMask;
@@ -35,6 +37,11 @@ public class CustomPhysics : MonoBehaviour
     {
         get => _gravity;
         set => _gravity = value;
+    }
+
+    public float FallMultiplier
+    {
+        get => _fallMultiplier;
     }
 
     public float HitSizeX
@@ -142,7 +149,6 @@ public class CustomPhysics : MonoBehaviour
                 _hitSizeX = hit.transform.localScale.x;
 
                 Debug.Log(hit.transform.localScale.x.ToString());
-                Debug.Log(hit.collider);
 
                 isHit = true;
             }

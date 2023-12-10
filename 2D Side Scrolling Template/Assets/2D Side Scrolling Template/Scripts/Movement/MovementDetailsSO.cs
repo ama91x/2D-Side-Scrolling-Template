@@ -18,6 +18,8 @@ public class MovementDetailsSO : ScriptableObject
     [HideInInspector] public float SlideCoolDown;
     [HideInInspector] public float JumpHeight;
     [HideInInspector] public float TimeToJumpApex;
+    [HideInInspector] public float CoyoteTime;
+    [HideInInspector] public float JumpBufferLength;
 
     public float GetMovementSpeed()
     {

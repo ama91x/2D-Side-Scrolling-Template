@@ -42,6 +42,8 @@ public class MovementDetailsSOEditor : Editor
             EditorGUILayout.LabelField("Jumping Details");
             movementDetails.JumpHeight = EditorGUILayout.FloatField("Jump Height", movementDetails.JumpHeight);
             movementDetails.TimeToJumpApex = EditorGUILayout.FloatField("Time To JumpApex", movementDetails.TimeToJumpApex);
+            movementDetails.CoyoteTime = EditorGUILayout.FloatField("Coyote Time", movementDetails.CoyoteTime);
+            movementDetails.JumpBufferLength = EditorGUILayout.FloatField("Jump Buffer Length", movementDetails.JumpBufferLength);
         }
         else if (movementDetails.CharacterType == SelectionType.Enemy)
         {
