@@ -40,7 +40,8 @@ public class MovementDetailsSOEditor : Editor
             EditorGUILayout.LabelField("");
 
             EditorGUILayout.LabelField("Jumping Details");
-            movementDetails.JumpHeight = EditorGUILayout.FloatField("Jump Height", movementDetails.JumpHeight);
+            movementDetails.MaxJumpHeight = EditorGUILayout.FloatField("Max Jump Height", movementDetails.MaxJumpHeight);
+            movementDetails.MinJumpHeight = EditorGUILayout.FloatField("Min Jump Height", movementDetails.MinJumpHeight);
             movementDetails.TimeToJumpApex = EditorGUILayout.FloatField("Time To JumpApex", movementDetails.TimeToJumpApex);
             movementDetails.CoyoteTime = EditorGUILayout.FloatField("Coyote Time", movementDetails.CoyoteTime);
             movementDetails.JumpBufferLength = EditorGUILayout.FloatField("Jump Buffer Length", movementDetails.JumpBufferLength);

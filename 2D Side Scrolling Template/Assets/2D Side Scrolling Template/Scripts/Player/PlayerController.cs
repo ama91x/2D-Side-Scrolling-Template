@@ -14,16 +14,15 @@ public class PlayerController : MonoBehaviour
     private float _playerDashCoolDownTimer = 0.0f;
     private float _playerSlideCoolDownTimer = 0.0f;
     private float _currentSpeed;
-    private float _jumpVelocity;
+    private float _maxJumpVelocity;
+    private float _minJumpVelocity;
     private float _coyoteTimeCounter;
     private float _jumpBufferCounter;
-
 
     private bool _isFacingRight;
     private bool _isPlayerDashing = false;
     private bool _isPlayerSliding = false;
     private bool _isPlayerFinishSlide = false;
-    private bool _isJumping;
     private bool _jumpBuffered;
 
     private Vector3 _velocity;
@@ -45,11 +44,12 @@ public class PlayerController : MonoBehaviour
     {
         _waitForFixedUpdate = new WaitForFixedUpdate();
 
-        _player.CPhsics2D.Gravity = -(2 * _movementDetails.JumpHeight) / Mathf.Pow(_movementDetails.TimeToJumpApex, 2);
+        _player.CPhsics2D.Gravity = -(2 * _movementDetails.MaxJumpHeight) / Mathf.Pow(_movementDetails.TimeToJumpApex, 2);
 
-        _jumpVelocity = Mathf.Abs(_player.CPhsics2D.Gravity) * _movementDetails.TimeToJumpApex;
+        _maxJumpVelocity = Mathf.Abs(_player.CPhsics2D.Gravity) * _movementDetails.TimeToJumpApex;
+        _minJumpVelocity = MathF.Sqrt(2 * Mathf.Abs(_player.CPhsics2D.Gravity) * _movementDetails.MinJumpHeight);
 
-        Debug.Log("Gravity is: " + _player.CPhsics2D.Gravity + "Jump Velcoity: " + _jumpVelocity);
+        Debug.Log("Gravity is: " + _player.CPhsics2D.Gravity + "Jump Velcoity: " + _maxJumpVelocity);
     }
 
     private void Update()
@@ -176,8 +176,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_coyoteTimeCounter > 0)
             {
-                _isJumping = true;
-                _velocity.y = _player.JumpEvents.CallJumpEvent(_jumpVelocity);
+                _velocity.y = _player.JumpEvents.CallJumpEvent(_maxJumpVelocity);
                 _jumpBuffered = false;
             }
             else
@@ -189,32 +188,29 @@ public class PlayerController : MonoBehaviour
 
         if (_jumpBuffered && _coyoteTimeCounter > 0)
         {
-            _isJumping = true;
-            _velocity.y = _player.JumpEvents.CallJumpEvent(_jumpVelocity);
+            _velocity.y = _player.JumpEvents.CallJumpEvent(_maxJumpVelocity);
             _jumpBuffered = false;
         }
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            _isJumping = false;
-        }
-
-        if (_isJumping == false && _velocity.y > 0)
-        {
-            _velocity.y *= _player.JumpEvents.CallJumpEvent(_jumpVelocity * 0.2f * Time.deltaTime);
-        }
-
-        if (_velocity.y < 0)
-        {
-            _velocity.y *= _player.CPhsics2D.FallMultiplier;
-
-            float maxFallSpeed = _player.CPhsics2D.Gravity / 1.6f;
-
-            if (_velocity.y < maxFallSpeed)
+            if (_velocity.y > _minJumpVelocity)
             {
-                _velocity.y = maxFallSpeed;
+                _velocity.y = _player.JumpEvents.CallJumpEvent(_minJumpVelocity);
             }
         }
+
+        // if (_velocity.y < 0)
+        // {
+        //     _velocity.y *= _player.CPhsics2D.FallMultiplier;
+
+        //     float maxFallSpeed = _player.CPhsics2D.Gravity / 1.6f;
+
+        //     if (_velocity.y < maxFallSpeed)
+        //     {
+        //         _velocity.y = maxFallSpeed;
+        //     }
+        // }
     }
 
     private IEnumerator PlayerDashRoutin(Vector3 direction)

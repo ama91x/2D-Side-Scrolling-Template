@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterType: 1
   MovementSpeed: 10
-  Acceleration: 1
+  Acceleration: 2
   MinMovementSpeed: 1
   MaxMovementSpeed: 1
   DashSpeed: 25
@@ -23,7 +23,8 @@ MonoBehaviour:
   SlideSpeed: 8
   SlideDistance: 5
   SlideCoolDown: 0.4
-  JumpHeight: 4
+  MaxJumpHeight: 4
+  MinJumpHeight: 1
   TimeToJumpApex: 0.4
   CoyoteTime: 0.1
   JumpBufferLength: 0.2
