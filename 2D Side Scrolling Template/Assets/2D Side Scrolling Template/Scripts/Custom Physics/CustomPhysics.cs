@@ -14,7 +14,8 @@ public class CustomPhysics : MonoBehaviour
 
     [Space(2)]
     [SerializeField] private float _gravity = -20;
-    [SerializeField] private float _fallMultiplier = 1.03f;
+    [SerializeField] private float _gravityMultiplier = 2f;
+    [SerializeField] private float _maxGravity = -20;
 
 
     [Tooltip("Used to check if there is any collisions")]
@@ -39,9 +40,14 @@ public class CustomPhysics : MonoBehaviour
         set => _gravity = value;
     }
 
-    public float FallMultiplier
+    public float GravityMultiplier
     {
-        get => _fallMultiplier;
+        get => _gravityMultiplier;
+    }
+
+    public float MaxGravity
+    {
+        get => _maxGravity;
     }
 
     public float HitSizeX

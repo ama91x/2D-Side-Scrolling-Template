@@ -98,13 +98,14 @@ public class PlayerController : MonoBehaviour
         MovementInput();
         PlayerDashCooldownTimer();
 
-        _velocity.y += _player.CPhsics2D.Gravity * Time.deltaTime;
 
-        float maxFallSpeed = _player.CPhsics2D.Gravity / 1.6f;
-
-        if (_velocity.y < maxFallSpeed)
+        if (_velocity.y < 0)
         {
-            _velocity.y = maxFallSpeed;
+            _velocity.y += _player.CPhsics2D.Gravity * _player.CPhsics2D.GravityMultiplier * Time.deltaTime;
+        }
+        else
+        {
+            _velocity.y += _player.CPhsics2D.Gravity * Time.deltaTime;
         }
 
         _player.CPhsics2D.Move(_velocity * Time.deltaTime);

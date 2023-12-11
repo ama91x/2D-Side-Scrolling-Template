@@ -153,6 +153,10 @@ PrefabInstance:
       value: 1.097308
       objectReference: {fileID: 0}
     - target: {fileID: 6937800016328190168, guid: 62272e2b0c8aea64cab2f05bbc472703, type: 3}
+      propertyPath: _gravityMultiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6937800016328190168, guid: 62272e2b0c8aea64cab2f05bbc472703, type: 3}
       propertyPath: _upCollisionMask.m_Bits
       value: 128
       objectReference: {fileID: 0}
