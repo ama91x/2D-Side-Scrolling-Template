@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Movement Details Player
   m_EditorClassIdentifier: 
   CharacterType: 1
-  MovementSpeed: 10
-  Acceleration: 2
+  MovementSpeed: 13.5
+  Acceleration: 1.2
   MinMovementSpeed: 1
   MaxMovementSpeed: 1
   DashSpeed: 25
@@ -23,8 +23,8 @@ MonoBehaviour:
   SlideSpeed: 8
   SlideDistance: 5
   SlideCoolDown: 0.4
-  MaxJumpHeight: 4
+  MaxJumpHeight: 5
   MinJumpHeight: 1
-  TimeToJumpApex: 0.4
+  TimeToJumpApex: 0.35
   CoyoteTime: 0.1
   JumpBufferLength: 0.2

@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 6175551283788931484}
   - component: {fileID: 7624163578265360040}
   - component: {fileID: 3595707818020099678}
+  - component: {fileID: 8961541994541674131}
   - component: {fileID: 7158854470010048259}
   - component: {fileID: 4222764462074546282}
   - component: {fileID: 4834979381146908558}
@@ -26,6 +27,8 @@ GameObject:
   - component: {fileID: 2479080105034174903}
   - component: {fileID: 4501399712077662204}
   - component: {fileID: 1339000445463554973}
+  - component: {fileID: 6860053094733997400}
+  - component: {fileID: 8239890918315067258}
   m_Layer: 3
   m_Name: Player - Side Scrolling Free Hand
   m_TagString: Player
@@ -276,6 +279,10 @@ MonoBehaviour:
   _horizontalRayCount: 4
   _verticalRayCount: 4
   _gravity: -20
+  _gravityMultiplier: 2
+  _maxGravity: -20
+  _maxClimbAngle: 0
+  _maxDescendAngle: 0
   _collisionMask:
     serializedVersion: 2
     m_Bits: 128
@@ -320,6 +327,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f0c7847d44ba24398723fc5f946827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8961541994541674131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056580027153078677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e224d7442905b824980231d032a70c6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canDash: 1
+  _canSlide: 0
 --- !u!114 &7158854470010048259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,6 +423,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 966d443b35676a54ab339bf75175ab14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6860053094733997400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056580027153078677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e86936ff9164024ab1ab06ae48e9571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8239890918315067258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056580027153078677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f8b733023e08824da50e49533587490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3554218011110410116

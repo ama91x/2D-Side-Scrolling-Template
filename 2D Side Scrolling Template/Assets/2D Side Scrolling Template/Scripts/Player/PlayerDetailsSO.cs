@@ -20,13 +20,7 @@ public class PlayerDetailsSO : ScriptableObject
     [Tooltip("Player run time animator controller")]
     public RuntimeAnimatorController PlayerRuntimeAnimatorController;
 
-    [Space(10)]
-    [Header("Jumping Valuo")]
-    [Tooltip("The Hight of the jump")]
-    public float JumpHeight;
 
-    [Tooltip("The time to reach the max of jump")]
-    public float TimeToJumpApex;
 
     [Space(10)]
     [Header("Health")]

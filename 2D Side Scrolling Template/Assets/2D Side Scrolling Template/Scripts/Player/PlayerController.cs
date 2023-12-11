@@ -136,11 +136,11 @@ public class PlayerController : MonoBehaviour
 
                 _isPlayerFinishSlide = false;
             }
-            else if (_playerDashCoolDownTimer <= 0.0f && !slideButtonDown)
+            else if (_playerDashCoolDownTimer <= 0.0f && !slideButtonDown && _player.PlayerAbilityManagers.CanDash)
             {
                 PlayerDash((Vector3)direction);
             }
-            else if (_playerDashCoolDownTimer <= 0.0f && !dashButtonDown)
+            else if (_playerDashCoolDownTimer <= 0.0f && !dashButtonDown && _player.PlayerAbilityManagers.CanSlide)
             {
                 PlayerSlid((Vector3)direction);
             }

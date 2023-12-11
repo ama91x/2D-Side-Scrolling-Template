@@ -17,7 +17,11 @@ public class CustomPhysics : MonoBehaviour
     [SerializeField] private float _gravityMultiplier = 2f;
     [SerializeField] private float _maxGravity = -20;
 
+    [Space(2)]
+    [SerializeField] private float _maxClimbAngle;
+    [SerializeField] private float _maxDescendAngle;
 
+    [Space(2)]
     [Tooltip("Used to check if there is any collisions")]
     [SerializeField] private LayerMask _collisionMask;
 
@@ -48,11 +52,17 @@ public class CustomPhysics : MonoBehaviour
     public float MaxGravity
     {
         get => _maxGravity;
+        set => _maxClimbAngle = value;
     }
 
     public float HitSizeX
     {
         get => _hitSizeX;
+    }
+
+    public float MaxClimbAngle
+    {
+        get => _maxClimbAngle;
     }
 
     public CollisionInfo CollisionInfos
@@ -73,9 +83,13 @@ public class CustomPhysics : MonoBehaviour
     public void Move(Vector3 velocity)
     {
         UpdateRaycastOrigins();
+        _collisions.Reset();
+        _collisions.VelocityOld = velocity;
 
-        _collisions.Reser();
-
+        if (velocity.y < 0)
+        {
+            DescendSlope(ref velocity);
+        }
         if (velocity.x != 0)
         {
             HorizontalCollisions(ref velocity);
@@ -96,7 +110,6 @@ public class CustomPhysics : MonoBehaviour
         for (int i = 0; i < _horizontalRayCount; i++)
         {
             Vector2 rayOrigin = (directionX == -1) ? _raycastOrigins.BottomLeft : _raycastOrigins.BottomRight;
-
             rayOrigin += Vector2.up * (_horizontalRaySpacing * i);
             RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, _collisionMask);
 
@@ -104,11 +117,39 @@ public class CustomPhysics : MonoBehaviour
 
             if (hit)
             {
-                velocity.x = (hit.distance - _skinWidth) * directionX;
-                rayLength = hit.distance;
 
-                _collisions.Left = directionX == -1;
-                _collisions.Right = directionX == 1;
+                float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+
+                if (i == 0 && slopeAngle <= _maxClimbAngle)
+                {
+                    if (_collisions.DescendingSlope)
+                    {
+                        _collisions.DescendingSlope = false;
+                        velocity = _collisions.VelocityOld;
+                    }
+                    float distanceToSlopeStart = 0;
+                    if (slopeAngle != _collisions.SlopAngleOld)
+                    {
+                        distanceToSlopeStart = hit.distance - _skinWidth;
+                        velocity.x -= distanceToSlopeStart * directionX;
+                    }
+                    ClimbSlop(ref velocity, slopeAngle);
+                    velocity.x += distanceToSlopeStart * directionX;
+                }
+
+                if (!_collisions.ClimbingSlope || slopeAngle > _maxClimbAngle)
+                {
+                    velocity.x = (hit.distance - _skinWidth) * directionX;
+                    rayLength = hit.distance;
+
+                    if (_collisions.ClimbingSlope)
+                    {
+                        velocity.y = Mathf.Tan(_collisions.SlopeAngel * Mathf.Deg2Rad) * Mathf.Abs(velocity.x);
+                    }
+
+                    _collisions.Left = directionX == -1;
+                    _collisions.Right = directionX == 1;
+                }
             }
         }
     }
@@ -131,8 +172,31 @@ public class CustomPhysics : MonoBehaviour
                 velocity.y = (hit.distance - _skinWidth) * directionY;
                 rayLength = hit.distance;
 
+                if (_collisions.ClimbingSlope)
+                {
+                    velocity.x = velocity.y / Mathf.Tan(_collisions.SlopeAngel * Mathf.Deg2Rad) * Mathf.Sign(velocity.x);
+                }
+
                 _collisions.Below = directionY == -1;
                 _collisions.Above = directionY == 1;
+            }
+        }
+
+        if (_collisions.ClimbingSlope)
+        {
+            float directionX = Mathf.Sign(velocity.x);
+            rayLength = Mathf.Abs(velocity.x) + _skinWidth;
+            Vector2 rayOrigin = ((directionX == -1) ? _raycastOrigins.BottomLeft : _raycastOrigins.BottomRight) + Vector2.up * velocity.y;
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, _collisionMask);
+
+            if (hit)
+            {
+                float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+                if (slopeAngle != _collisions.SlopeAngel)
+                {
+                    velocity.x = (hit.distance - _skinWidth) * directionX;
+                    _collisions.SlopeAngel = slopeAngle;
+                }
             }
         }
     }
@@ -161,6 +225,55 @@ public class CustomPhysics : MonoBehaviour
         }
 
         return isHit;
+    }
+
+    private void ClimbSlop(ref Vector3 velocity, float slopAngle)
+    {
+        float moveDistance = Mathf.Abs(velocity.x);
+        float climbVelocityY = Mathf.Sin(slopAngle * Mathf.Deg2Rad) * moveDistance;
+
+        if (velocity.y <= climbVelocityY)
+        {
+            velocity.y = climbVelocityY;
+            velocity.x = Mathf.Cos(slopAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(velocity.x);
+
+            _collisions.Below = true;
+            _collisions.ClimbingSlope = true;
+            _collisions.SlopeAngel = slopAngle;
+        }
+    }
+
+    void DescendSlope(ref Vector3 velocity)
+    {
+        float directionX = Mathf.Sign(velocity.x);
+
+        Vector2 rayOrigin = (directionX == -1) ? _raycastOrigins.BottomRight : _raycastOrigins.BottomLeft;
+        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, Mathf.Infinity, _collisionMask);
+
+        if (hit)
+        {
+            float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+
+            Debug.Log("Direction X: " + directionX + "Normal hit: " + Mathf.Sign(hit.normal.x));
+
+            if (slopeAngle != 0 && slopeAngle <= _maxDescendAngle)
+            {
+                if (Mathf.Sign(hit.normal.x) == directionX)
+                {
+                    if (hit.distance - _skinWidth <= Mathf.Tan(slopeAngle * Mathf.Deg2Rad) * Mathf.Abs(velocity.x))
+                    {
+                        float moveDistance = Mathf.Abs(velocity.x);
+                        float descendVelocityY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
+                        velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(velocity.x);
+                        velocity.y -= descendVelocityY;
+
+                        _collisions.SlopeAngel = slopeAngle;
+                        _collisions.DescendingSlope = true;
+                        _collisions.Below = true;
+                    }
+                }
+            }
+        }
     }
 
     public void CalculateRaySpacing()
@@ -197,10 +310,23 @@ public class CustomPhysics : MonoBehaviour
         public bool Above, Below;
         public bool Left, Right;
 
-        public void Reser()
+        public bool ClimbingSlope;
+        public bool DescendingSlope;
+
+        public float SlopeAngel, SlopAngleOld;
+
+        public Vector3 VelocityOld;
+
+        public void Reset()
         {
             Above = Below = false;
             Left = Right = false;
+
+            ClimbingSlope = false;
+            DescendingSlope = false;
+
+            SlopAngleOld = SlopeAngel;
+            SlopeAngel = 0;
         }
     }
 }

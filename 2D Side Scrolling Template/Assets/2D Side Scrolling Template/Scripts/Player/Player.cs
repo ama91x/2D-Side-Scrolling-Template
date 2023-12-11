@@ -11,6 +11,7 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(CustomPhysics))]
 [RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(PlayerAbilityManager))]
 [RequireComponent(typeof(AnimatePlayer))]
 [RequireComponent(typeof(IdleEvent))]
 [RequireComponent(typeof(Idle))]
@@ -30,6 +31,7 @@ public class Player : MonoBehaviour
     private CustomPhysics _customPhysics;
     private PlayerController _playerController;
     private Health _health;
+    private PlayerAbilityManager _playerAbilityManager;
 
     private IdleEvent _idleEvent;
     private JumpEvent _jumpEvent;
@@ -93,11 +95,17 @@ public class Player : MonoBehaviour
         get => _movementToPositionEvent;
     }
 
+    public PlayerAbilityManager PlayerAbilityManagers
+    {
+        get => _playerAbilityManager;
+    }
+
     private void Awake()
     {
         _customPhysics = GetComponent<CustomPhysics>();
         _playerController = GetComponent<PlayerController>();
         _health = GetComponent<Health>();
+        _playerAbilityManager = GetComponent<PlayerAbilityManager>();
 
         _idleEvent = GetComponent<IdleEvent>();
         _jumpEvent = GetComponent<JumpEvent>();
