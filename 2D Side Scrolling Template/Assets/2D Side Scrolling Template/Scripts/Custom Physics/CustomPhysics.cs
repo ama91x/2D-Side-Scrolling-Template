@@ -86,18 +86,22 @@ public class CustomPhysics : MonoBehaviour
         _collisions.Reset();
         _collisions.VelocityOld = velocity;
 
-        if (velocity.y < 0)
-        {
-            DescendSlope(ref velocity);
-        }
+
         if (velocity.x != 0)
         {
             HorizontalCollisions(ref velocity);
         }
+
+        if (velocity.y < 0)
+        {
+            DescendSlope(ref velocity);
+        }
+
         if (velocity.y != 0)
         {
             VerticalCollisions(ref velocity);
         }
+
 
         transform.Translate(velocity);
     }
@@ -158,6 +162,8 @@ public class CustomPhysics : MonoBehaviour
     {
         float directionY = Mathf.Sign(velocity.y);
         float rayLength = Mathf.Abs(velocity.y) + _skinWidth;
+
+
 
         for (int i = 0; i < _verticalRayCount; i++)
         {
@@ -243,9 +249,12 @@ public class CustomPhysics : MonoBehaviour
         }
     }
 
-    void DescendSlope(ref Vector3 velocity)
+    private void DescendSlope(ref Vector3 velocity)
     {
         float directionX = Mathf.Sign(velocity.x);
+
+        Debug.Log("direction X: " + directionX);
+        Debug.Log("velcoity X: " + velocity.x);
 
         Vector2 rayOrigin = (directionX == -1) ? _raycastOrigins.BottomRight : _raycastOrigins.BottomLeft;
         RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, Mathf.Infinity, _collisionMask);
@@ -254,7 +263,7 @@ public class CustomPhysics : MonoBehaviour
         {
             float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
 
-            Debug.Log("Direction X: " + directionX + "Normal hit: " + Mathf.Sign(hit.normal.x));
+            //Debug.Log("Direction X: " + directionX + "Normal hit: " + Mathf.Sign(hit.normal.x));
 
             if (slopeAngle != 0 && slopeAngle <= _maxDescendAngle)
             {

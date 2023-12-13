@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _currentSpeed = _moveSpeed;
                 }
-                _player.MovementByVelocityEvents.CallMovementByVelocityEvent(direction, _currentSpeed * Time.deltaTime);
+                _player.MovementByVelocityEvents.CallMovementByVelocityEvent(direction, _moveSpeed * Time.deltaTime);
 
                 _isPlayerFinishSlide = false;
             }
