@@ -11,7 +11,7 @@ public class WeaponDetailsSO : ScriptableObject
 
     [Header("Weapon Configuration")]
     public Vector3 WeaponShootPosition;
-    //public AmmoDetailsSO WeaponCurrentAmmo;
+    public AmmoDetailsSO WeaponCurrentAmmo;
 
     [Header("Weapon Operating Values")]
     public bool HasInfiniteAmmo = false;
