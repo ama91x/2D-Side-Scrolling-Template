@@ -4,6 +4,7 @@
 //          all the details for a spasific player
 // ----------------------------------------------------------------
 
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Player Details", menuName = "Scriptable Objects/Player/Player Details", order = 1)]
@@ -20,12 +21,15 @@ public class PlayerDetailsSO : ScriptableObject
     [Tooltip("Player run time animator controller")]
     public RuntimeAnimatorController PlayerRuntimeAnimatorController;
 
-
-
     [Space(10)]
     [Header("Health")]
     [Tooltip("Player starting health")]
     public int PlayerHealthAmount;
+
+    [Space(10)]
+    [Header("Weapon")]
+    public WeaponDetailsSO StartingWeapon;
+    public List<WeaponDetailsSO> StartingWeaponList;
 
     [Space(10)]
     [Header("Others")]

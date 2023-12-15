@@ -35,7 +35,7 @@ public class Ammo : MonoBehaviour, IFireable
             _isMaterialSet = true;
         }
 
-        Vector3 distanceVector = new Vector3(_ammoSpeed * Time.deltaTime, transform.position.y, transform.position.z);
+        Vector3 distanceVector = new Vector3(_ammoSpeed * Time.deltaTime, 0, 0);
 
         transform.position += distanceVector;
 

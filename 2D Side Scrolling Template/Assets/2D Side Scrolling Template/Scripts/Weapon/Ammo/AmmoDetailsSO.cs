@@ -11,7 +11,7 @@ public class AmmoDetailsSO : ScriptableObject
 
     [Header("Ammo Sprite - Prefab - Material")]
     public Sprite AmmoSprite;
-    public GameObject[] AmmoOrefabArray;
+    public GameObject[] AmmoPrefabArray;
     public Material AmmoMaterial;
     public float AmmoChargeTime;
     public Material AmmoChargeMaterial;

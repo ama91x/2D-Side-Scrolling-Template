@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponNames: Pistole
   WeaponSprite: {fileID: 0}
-  WeaponShootPosition: {x: 0.7, y: 0.5, z: 0}
+  WeaponShootPosition: {x: 0.9, y: 0.8, z: 0}
   WeaponCurrentAmmo: {fileID: 11400000, guid: fa1314614bb87a64f9754053baa2fefa, type: 2}
   HasInfiniteAmmo: 1
-  HasInfinitClipCapacity: 0
+  HasInfinitClipCapacity: 1
   HasPrecharge: 0
   WeaponClipAmmoCapacity: 10
   WeaponAmmoCapacity: 0

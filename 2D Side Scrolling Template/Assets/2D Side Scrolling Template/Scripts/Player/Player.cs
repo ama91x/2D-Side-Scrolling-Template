@@ -21,12 +21,20 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(MovementByVelocity))]
 [RequireComponent(typeof(MovementToPositionEvent))]
 [RequireComponent(typeof(MovementToPosition))]
+[RequireComponent(typeof(SetActiveWeaponEvent))]
+[RequireComponent(typeof(ActiveWeapon))]
+[RequireComponent(typeof(FireWeaponEvent))]
+[RequireComponent(typeof(WeaponFiredEvent))]
+[RequireComponent(typeof(FireWeapon))]
 [RequireComponent(typeof(Health))]
 
 [DisallowMultipleComponent]
 #endregion
 public class Player : MonoBehaviour
 {
+    // Inspector Assigne
+    [SerializeField] private List<Weapon> _weaponList = new List<Weapon>();
+
     // Private
     private CustomPhysics _customPhysics;
     private PlayerController _playerController;
@@ -37,6 +45,10 @@ public class Player : MonoBehaviour
     private JumpEvent _jumpEvent;
     private MovementByVelocityEvent _movementByVelocityEvent;
     private MovementToPositionEvent _movementToPositionEvent;
+    private SetActiveWeaponEvent _setActiveWeaponevent;
+    private ActiveWeapon _activeWeapon;
+    private FireWeaponEvent _fireWeaponEvent;
+    private WeaponFiredEvent _weaponFiredEvent;
 
     private PlayerDetailsSO _playerDetails;
 
@@ -100,6 +112,32 @@ public class Player : MonoBehaviour
         get => _playerAbilityManager;
     }
 
+    public List<Weapon> WeaponList
+    {
+        get => _weaponList;
+    }
+
+    public SetActiveWeaponEvent SetActiveWeaponEvents
+    {
+        get => _setActiveWeaponevent;
+        set => _setActiveWeaponevent = value;
+    }
+
+    public ActiveWeapon ActiveWeapons
+    {
+        get => _activeWeapon;
+    }
+
+    public FireWeaponEvent FireWeaponEvents
+    {
+        get => _fireWeaponEvent;
+    }
+
+    public WeaponFiredEvent WeaponFiredEvents
+    {
+        get => _weaponFiredEvent;
+    }
+
     private void Awake()
     {
         _customPhysics = GetComponent<CustomPhysics>();
@@ -111,6 +149,10 @@ public class Player : MonoBehaviour
         _jumpEvent = GetComponent<JumpEvent>();
         _movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
         _movementToPositionEvent = GetComponent<MovementToPositionEvent>();
+        _setActiveWeaponevent = GetComponent<SetActiveWeaponEvent>();
+        _activeWeapon = GetComponent<ActiveWeapon>();
+        _fireWeaponEvent = GetComponent<FireWeaponEvent>();
+        _weaponFiredEvent = GetComponent<WeaponFiredEvent>();
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
@@ -122,11 +164,43 @@ public class Player : MonoBehaviour
     {
         this._playerDetails = playerDetails;
 
+        CreatePlayerStartingWeapons();
+
         SetPlayerHealth();
+    }
+
+    private void CreatePlayerStartingWeapons()
+    {
+        _weaponList.Clear();
+
+        foreach (WeaponDetailsSO weaponDetails in _playerDetails.StartingWeaponList)
+        {
+            AddWeaponToPlayer(weaponDetails);
+        }
     }
 
     private void SetPlayerHealth()
     {
         _health.SetStartingHealth(_playerDetails.PlayerHealthAmount);
+    }
+
+    public Weapon AddWeaponToPlayer(WeaponDetailsSO weaponDetails)
+    {
+        Weapon weapon = new Weapon()
+        {
+            WeaponDetails = weaponDetails,
+            WeaponReloadTime = 0.015f,
+            WeaponClipRemainingAmmo = weaponDetails.WeaponClipAmmoCapacity,
+            WeaponReaminingAmmo = weaponDetails.WeaponAmmoCapacity,
+            IsWeaponReloading = false
+        };
+
+        _weaponList.Add(weapon);
+
+        weapon.WeaponListPosition = _weaponList.Count;
+
+        _setActiveWeaponevent.CallSetActiveWeaponEvent(weapon);
+
+        return weapon;
     }
 }

@@ -1,0 +1,22 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SetActiveWeaponEvent : MonoBehaviour
+{
+    public event Action<SetActiveWeaponEvent, SetActiveWeaponEventArgs> OnSetActiveWeapon;
+
+    public void CallSetActiveWeaponEvent(Weapon weapon)
+    {
+        OnSetActiveWeapon?.Invoke(this, new SetActiveWeaponEventArgs()
+        {
+            Weapon = weapon
+        });
+    }
+}
+
+public class SetActiveWeaponEventArgs : EventArgs
+{
+    public Weapon Weapon;
+}

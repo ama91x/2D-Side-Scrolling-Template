@@ -6,10 +6,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Inspector Assigne
-    [SerializeField] private Transform _weaponShootingPosition;
     [SerializeField] private MovementDetailsSO _movementDetails;
 
     // Private
+    private int _currentWeaponIndex = 1;
+
     private float _moveSpeed;
     private float _playerDashCoolDownTimer = 0.0f;
     private float _playerSlideCoolDownTimer = 0.0f;
@@ -43,6 +44,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _waitForFixedUpdate = new WaitForFixedUpdate();
+
+        SetStartingWeapon();
 
         _player.CPhsics2D.Gravity = -(2 * _movementDetails.MaxJumpHeight) / Mathf.Pow(_movementDetails.TimeToJumpApex, 2);
 
@@ -96,6 +99,7 @@ public class PlayerController : MonoBehaviour
 
         PlayerJump();
         MovementInput();
+        WeaponInput();
         PlayerDashCooldownTimer();
 
 
@@ -109,6 +113,21 @@ public class PlayerController : MonoBehaviour
         }
 
         _player.CPhsics2D.Move(_velocity * Time.deltaTime);
+    }
+
+    private void SetStartingWeapon()
+    {
+        int index = 1;
+
+        foreach (Weapon weapon in _player.WeaponList)
+        {
+            if (weapon.WeaponDetails == _player.PlayerDetails.StartingWeapon)
+            {
+                SetWeaponIndex(index);
+                break;
+            }
+            index++;
+        }
     }
 
     private void MovementInput()
@@ -158,6 +177,19 @@ public class PlayerController : MonoBehaviour
         {
             _player.IdleEvents.CallIdleEvent();
             _currentSpeed = 0;
+        }
+    }
+
+    private void WeaponInput()
+    {
+        FireWeaponInput();
+    }
+
+    private void FireWeaponInput()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _player.FireWeaponEvents.CallFireWeaponEvent(true);
         }
     }
 
@@ -268,6 +300,15 @@ public class PlayerController : MonoBehaviour
         if (_playerDashCoolDownTimer >= 0.0f)
         {
             _playerDashCoolDownTimer -= Time.deltaTime;
+        }
+    }
+
+    private void SetWeaponIndex(int weaponIndex)
+    {
+        if (weaponIndex - 1 < _player.WeaponList.Count)
+        {
+            _currentWeaponIndex = weaponIndex;
+            _player.SetActiveWeaponEvents.CallSetActiveWeaponEvent(_player.WeaponList[weaponIndex - 1]);
         }
     }
 
